@@ -14,8 +14,8 @@
      * @constructor
      */
     CrossDomain = function ($debug, $serverType) {
-        var debug = false,
-            serverType = 'normal';
+        this.debug = false;
+        this.serverType = 'normal';
 
         if (arguments.length === 1 && typeof arguments[0] === 'boolean') {
             debug = arguments[0];
