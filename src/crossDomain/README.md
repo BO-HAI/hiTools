@@ -1,4 +1,4 @@
-## crossDomain: 跨域请求服务
+### crossDomain: 跨域请求服务
 
     namespace: window.hi
     version: alpha 0.0.1
@@ -9,38 +9,73 @@ var crossDomain = new window.hi.CrossDomain([$debug,] [$serverType]);
 
     @param: [$debug]{boolean} 用于切换API地址;
 
-API地址存储在hiConfig.crossDomain.project对象中，
-
-project对象包含项目名称属性。通过名称访问项目域名属性；
+`settings`函数负责设置接口地址管理对象，他大概看起来是这样子的：
 
 ```javascript
-project: {
-    //主项目
-    master: {
-        domain: 'http://api.edu24ol.com',
-        testDomain: ''
-    }
-}
+{
+	apiName1: {
+		domain: '',
+		testDomain: ''
+	},
+	apiName2: {
+		domain: '',
+		testDomain: ''
+	}
+};
 ```
 
-testDomain实际不存在，如果需要可以在实例化Server对象前自定义
+配置接口管理对象
 
 ```javascript
-hiConfig.crossDomain.project.master.testDomain = 'http://apitest.edu24ol.com';
+crossDomain.settings({
+	api: {
+		domain: 'http://api.com/phpapi',
+		testDomain: 'http://loaclhost:8080/phpapi'
+	}
+});
 ```
 
     @param: [$serverType] {String} 服务类型，默认：'normal'; 可选：'mvc'
 
 如果你的服务是mvc架构，通过route来分配url,可以指定这个参数为“mvc”;
 
+## CrossDomain提供的函数
+#### 1.crossDomain.createFullUrl(projectName, interfaceName, data)
+
+创建完整的API地址
+
+    @param: projectName   {String}：项目名称
+    @param: interfaceName {String}：接口路径
+    @param: data          {Object}：请求参数（get, delete）
+    @returns {String}
+
+```javascript
+var crossDomainMvc = new window.hi.crossDomain('mvc'),
+    crossDomain = new window.hi.crossDomain(),
+    url;
+
+crossDomain.settings({
+	api: {
+		domain: 'http://api.com',
+		testDomain: 'http://loaclhost:8080/phpapi'
+	}
+});
+
+url = crossDomainMvc.createFullUrl('api', 'User', {name: '888wj', pwd: '1111'});
+
+console.log(url); // http://api.com/User888wj/1111
 
 
-##CrossDomain提供的函数
+url = crossDomain.createFullUrl('api', 'User', {name: '888wj', pwd: '1111'});
 
-#### 1、crossDomain.getAsy(url, [data])
-#### 2、crossDomain.postAsy(url, data)
-#### 3、crossDomain.putAsy(url, data)
-#### 4、crossDomain.delAsy(url, [data])
+console.log(url); // http://api.com/User?name=888wj&pwd=1111
+```
+
+
+#### 2、crossDomain.getAsy(url, [data])
+#### 3、crossDomain.postAsy(url, data)
+#### 4、crossDomain.putAsy(url, data)
+#### 5、crossDomain.delAsy(url, [data])
 
 
 跨域请求
@@ -99,28 +134,4 @@ userInfoPromise.done(function (n, m) {
     console.info(m[0]);// result2
     //正常处理
 });
-```
-
-#### 5、crossDomain.createFullUrl(projectName, interfaceName, data)
-
-创建完整的API地址
-
-    @param: projectName   {String}：项目名称
-    @param: interfaceName {String}：接口路径
-    @param: data          {Object}：请求参数（get, delete）
-    @returns {String}
-
-```javascript
-var crossDomainMvc = new window.hi.crossDomain('mvc'),
-    crossDomain = new window.hi.crossDomain(),
-    url;
-
-url = crossDomainMvc.createFullUrl('master', 'User', {name: '888wj', pwd: '1111'});
-
-console.log(url); // http://api.edu24ol.com/User888wj/1111
-
-
-url = crossDomain.createFullUrl('master', 'User', {name: '888wj', pwd: '1111'});
-
-console.log(url); // http://api.edu24ol.com/User?name=888wj&pwd=1111
 ```

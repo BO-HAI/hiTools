@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="//cdn.bootcss.com/jquery/1.11.0/jquery.js"></script>
+    <script src="src/crossDomain/hi.crossDomain.js"></script>
+    <script>
+        $(function () {
+            var cd = new hi.CrossDomain(),
+                url;
+
+            console.log(cd);
+
+            cd.settings({
+                api: {
+                    domain: 'http://api.com/phpapi',
+                    testDomain: 'http://loaclhost:8080/phpapi'
+                }
+            });
+
+
+            url = cd.createFullUrl('api', 'login', {r: '/callback.html'});
+
+            console.log(url);
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>

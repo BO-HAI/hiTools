@@ -14,32 +14,42 @@
      * @constructor
      */
     CrossDomain = function ($debug, $serverType) {
+        var config = {
+            api: {
+                domain: '',
+                testDomain: ''
+            }
+        };
+
         this.debug = false;
         this.serverType = 'normal';
 
+        this.settings = function (option) {
+            config = option;
+        };
+
+        this.getConfig = function () {
+            return config;
+        };
+
         if (arguments.length === 1 && typeof arguments[0] === 'boolean') {
-            debug = arguments[0];
+            this.debug = arguments[0];
         }
 
         if (arguments.length === 1 && typeof arguments[0] === 'string') {
-            serverType = arguments[0];
+            this.serverType = arguments[0];
         }
 
         if (arguments.length > 1) {
-            debug = arguments[0];
-            serverType = arguments[1];
+            this.debug = arguments[0];
+            this.serverType = arguments[1];
         }
 
-        this.getDebug = function () {
-            return debug;
-        };
 
-        this.getServerType = function () {
-            return serverType;
-        };
 
-        this.config = this.getConfig();
     };
+
+
 
     CrossDomain.prototype.getConfig = function () {
         if (!window.EduConfig) {
@@ -234,7 +244,7 @@
     CrossDomain.prototype.createFullUrl = function (projectName, interfaceName, data) {
         var that = this,
             config = that.getConfig(),
-            urlType = that.getServerType(),
+            urlType = that.serverType,
             urlData = {},
             chars,
             key,
@@ -251,10 +261,10 @@
 
 
         // 判断是否调试状态
-        if (!that.getDebug() && (projectName in config.project)) {
-            domain = config.project[projectName].domain;
+        if (!that.debug && (projectName in config)) {
+            domain = config[projectName].domain;
         } else if (projectName in config.project) {
-            domain = config.project[projectName].testDomain;
+            domain = config[projectName].testDomain;
         }
 
         if (interfaceName.substr(0, 1) !== '/') {
@@ -262,7 +272,7 @@
         }
 
         // 如果项目名不存在，直接使用projectName当作域名；即：可以传入一个完整域名
-        if (projectName in config.project) {
+        if (projectName in config) {
             url = domain + interfaceName;
         } else {
             projectName = projectName.substr(projectName.length - 1) === '/' ?

@@ -2,6 +2,7 @@
 
 ##### namespace: window.hi
 ##### version:   1.0.0
+##### dependent: Jquery 1.9.0+
 
 ## crossDomain (功能未完成)
 ##### version: alpha 0.0.1
